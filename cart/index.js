@@ -20,6 +20,9 @@ const vm = new Vue({
     },
     mounted: async function () {
         let products = JSON.parse(window.localStorage.getItem('shopping-cart'));
+        for(let product of products) {
+            if (!product.quantity) product.quantity = 0;
+        }
         this.images = products;
         // this.images = listAlignment(products, this.options.columns);
         this.refreshHandler();

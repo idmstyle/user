@@ -113,8 +113,10 @@
                                     <p class="design-name">
                                         <span contenteditable="false" class="editable-text">${image.name}</span>
                                         <span v-show="options.quantityShow">-</span>
-                                        <span v-show="options.quantityShow" contenteditable="true" class="editable-text">${image.quantity}</span>
-                                        <span class="unit-name" contenteditable="true" v-show="options.quantityShow">${options.unitName}</span>
+                                        <span v-show="options.quantityShow" contenteditable="false" class="editable-text">
+                                            <input type="text" class="quantity" v-model="image.quantity" style="width: 40px; padding: 2px; text-align: center; outline: none;"/>
+                                        </span>
+                                        <span class="unit-name" contenteditable="false" v-show="options.quantityShow">${options.unitName}</span>
                                     </p>
                                 </li>
                                 <li class="design-item hidden" v-else>
