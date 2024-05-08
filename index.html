@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="version" content ="?v=0.01">
+        <title>dmstyle</title>
+		<link href="static/img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+        <link href="static/img/favicon.ico" rel="icon"/>
+        <style type="text/css">
+            *{padding: 0; margin: 0; font-size: 12px;}
+            html{zoom:1;}
+            html,body,#app{width: 100%; height: 100%; overflow: hidden;}
+            /* loading样式不能放在#app-content，这样会导致在部分没有完全覆盖的页面上一直显示loading */
+            [v-cloak]{display:none; background-image:url( 'static/img/loading.svg'); background-position: center; background-repeat: no-repeat;}
+            #app{display: flex; flex-direction: column;}
+            #app-header{padding:0 10px; height: 29px; min-height:29px; overflow: hidden; background-color: #363636; color: #999; display: flex;}
+            #app-header .userinfo-container{width: 200px; line-height: 29px; color: #ff7300; text-align:right;}
+            #app-header .menu-container{flex-grow: 1; width: 100%; overflow-x: auto;}
+            #app-header .menu-container ul{white-space: nowrap;}
+            #app-header .menu-container ul, #app-header .menu-container li{padding: 0; margin: 0; height: 100%;}
+            #app-header .menu-container li{list-style: none; display: inline-block; padding: 0 5px; }
+            #app-header .menu-container li a{color: #999; line-height: 29px; text-decoration: none;}
+            #app-header .menu-container li:hover{background-color: white;}
+            #app-header .menu-container li:hover a{color: black;}
+            #app-content{flex-grow: 1; overflow: hidden;}
+        </style>
+        <link rel="stylesheet" href="static/css/index.css?v=0.01"/>
+	</head>
+	<body>
+        <div id="app">
+            <div id="app-header">
+                <div class="menu-container">
+                    <ul>
+                        <li>
+                            <a nofollow href="?_path_=product/index.html" tabIndex="-1">产品列表</a>
+                        </li>
+                        <li>
+                            <a nofollow href="?_path_=cart/index.html" tabIndex="-1">购物车</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="userinfo-container">
+                    <el-icon class="el-icon-user-solid"></el-icon>
+                    <span style="margin-left:5px;">user</span>
+                </div>
+            </div>
+            <div id="app-content" class="content-main">
+                <iframe id="topframe-main" src="" style="width:100%; height:100%; border: none;padding:0; margin:0;overflow: hidden;"></iframe>
+            </div>
+        </div>
+        <script type="text/javascript">
+            const key = '_path_';
+            const params = new URLSearchParams(window.location.search);
+            const path = params.get(key);
+
+            if (path != null) {
+                // 去掉_path_参数
+                params.delete(key);
+                // 重新构建查询字符串并添加到url
+                const url = `${path}?${params.toString()}`;
+                // iframe重定向
+                if (url) document.getElementById('topframe-main').setAttribute('src', url);
+            } else {
+                const url = 'product/index.html';
+                if (url) document.getElementById('topframe-main').setAttribute('src', url);
+            }
+
+            document.getElementById('topframe-main').addEventListener('load', function () {
+                const title = event.target.contentWindow.document.title;
+                updateDocumentTitle(title);
+            });
+
+            function updateDocumentTitle(title = '') {
+                if (!title) title = event.target.contentWindow.document.title;
+                document.title = title + ' - dmstyle';
+            }
+
+            isLogin();
+
+            function isLogin() {
+                const user = getUserProfile();
+                if (!user) window.location.href = 'auth/login.html';
+            }
+
+            function getUserProfile() {
+                let user = window.localStorage.getItem('user');
+                user = typeof user == 'string' ? JSON.parse(user) : {};
+
+                const params = new URLSearchParams(window.location.search);
+                let username = params.get('username');
+                let password = params.get('password');
+
+                if (!!username && !!password) {
+                    user.username = username;
+                    user.password = password
+                    
+                    window.localStorage.setItem('user', JSON.stringify(user));
+                }
+
+                if ( JSON.stringify(user) == "{}" ) user = null;
+
+                return user;
+            }
+        </script>
+	</body>
+</html>

@@ -1,0 +1,7 @@
+html, body, #app{width:100%; height: 100%; padding: 0; margin: 0;}
+[v-cloak]{display:none;}
+#frame-main{padding: 0;}
+.theme-image{ margin: 0 5px;}
+
+.detail-link{line-height: 26px; vertical-align: top;}
+.image-slot{color:#eee;}

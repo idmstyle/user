@@ -1,0 +1,49 @@
+/* --------------------------------- 通用样式：开始 ----------------------------------------*/
+*{font-size: 12px; font-family: "Noto Serif", "Noto Serif SC", "Noto Sans", "Noto Sans SC", "HarmonyOS Sans SC", NSimSun, SimSun, SimHei, FangSong, KaiTi, "Courier New", Courier, Source Han Sans;}
+html, body, #app,.el-container{width:100%; height: 100%; padding: 0; margin: 0;}
+body{background-color: #f4f4f5;}
+[v-cloak]{display:none;}
+.el-main{padding:10px; overflow-x: hidden;}
+
+#app-header{padding:0 10px; height: 29px; overflow: hidden; background-color: #363636; color: #999; display: flex; /*border-bottom: 0.5px solid #eee;*/}
+#app-header .userinfo-container{width: 200px; line-height: 29px; color: #ff7300;}
+#app-header .menu-container{flex-grow: 1;}
+#app-header .menu-container ul, #app-header .menu-container li{padding: 0; margin: 0; height: 100%;}
+#app-header .menu-container li{list-style: none; display: inline-block; padding: 0 8px; }
+#app-header .menu-container li a{color: #999; line-height: 29px; text-decoration: none;}
+/* #app-header .menu-container li:hover{background-color: white;}
+#app-header .menu-container li:hover a{color: black;} */
+
+/* --------------------------------- 侧栏样式：开始 ----------------------------------------*/
+.frame-aside{background-color: #333744; width: 124px!important; overflow-x: hidden;}
+.frame-aside .el-menu{border-right: none;}
+.frame-aside .el-menu-item{font-size: 12px; background-color: #333744; }
+.frame-aside .el-menu-item, .frame-aside .el-submenu__title{height: 40px; line-height: 40px;}
+.frame-aside .el-menu-item i, .frame-aside .el-menu-item.is-active i, .frame-aside .el-menu-item a, .frame-aside .el-menu-item a:hover, .frame-aside .el-menu-item a:visited{color: #fff;}
+.frame-aside .el-menu-item a{text-decoration: none;}
+.frame-aside .el-menu-item [class^=el-icon-]{width: 20px; font-size: 16px;}
+.frame-aside .collapse-button{height: 40px; line-height: 40px; text-align: center; vertical-align: middle; margin: 0 auto; padding: 0; background: #4a5064; color: #aeb9c2; cursor: pointer;}
+.frame-aside .el-menu-item:focus, .frame-aside .el-menu-item:hover{background-color: #4a5064;}
+.frame-aside .el-tooltip{padding:0 15px!important;}
+.frame-aside.frame-aside-collapse{width: 50px!important;}
+.frame-aside-collapse .el-menu--collapse{width: 50px!important;}
+.frame-aside-collapse .el-menu-item{font-size: 12px; background-color: #333744; padding-left:0px!important; padding-right: 0px!important;}
+.el-tooltip__popper.is-dark a, .el-tooltip__popper.is-dark a:hover, .el-tooltip__popper.is-dark a:visited{color: white; text-decoration: none;}
+
+/* --------------------------------- 主区域头部样式：开始 -------------------------------------*/
+.content-main{padding:0;}
+.content-header{ height: 40px; background-color: white; color: white; border-bottom: 1px solid #eee; padding:0 10px;}
+.content-header .el-form-item__label{font-size: 12px; padding-right: 5px;}
+.content-header .el-form-item--mini .el-form-item__content, .content-header .el-form-item--mini .el-form-item__label{line-height: 24px;}
+.content-header .el-input--mini .el-input__inner{height: 24px; line-height: 24px;}
+.content-header .el-button--mini, .content-header .el-button--mini.is-round{padding-top:5px; padding-bottom: 5px;}
+.content-header .el-form{padding:6px 0px}
+.content-header .el-form--inline .el-form-item{margin-bottom: 0!important;}
+.content-header .el-col:first-child{text-align: left;}
+.content-header .el-col:last-child{text-align: right;}
+
+/* --------------------------------- 主区域正文样式：开始 -------------------------------------*/
+#frame-main{background-color: rgb(244, 244, 245);}
+/* el-icon形式的button */
+.el-icon-button{font-size: 16px; margin-right: 5px; cursor: pointer;}
+/* .loading{background: url('../img/loading.svg') center center no-repeat;} */

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="version" content ="?v=0.01">
+        <base href="../">
+        <title>购物车</title>
+		<link href="static/img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+        <link href="static/img/favicon.ico" rel="icon"/>
+        <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/theme-chalk/index.min.css" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" href="static/css/index.css?v=0.01"/>
+        <style type="text/css">
+            *{padding: 0; margin: 0; font-size: 12px;}
+            html{zoom:1;}
+            html,body,#app{width: 100%; height: 100%; overflow: hidden;}
+            /* loading样式不能放在#app-content，这样会导致在部分没有完全覆盖的页面上一直显示loading */
+            [v-cloak]{display:none; background-image:url( 'static/img/loading.svg'); background-position: center; background-repeat: no-repeat;}
+            #app{display: flex; flex-direction: column;}
+            #app-header{padding:0 10px; height: 29px; min-height:29px; overflow: hidden; background-color: #363636; color: #999; display: flex;}
+            #app-header .userinfo-container{width: 200px; line-height: 29px; color: #ff7300; text-align:right;}
+            #app-header .menu-container{flex-grow: 1; width: 100%; overflow-x: auto;}
+            #app-header .menu-container ul{white-space: nowrap;}
+            #app-header .menu-container ul, #app-header .menu-container li{padding: 0; margin: 0; height: 100%;}
+            #app-header .menu-container li{list-style: none; display: inline-block; padding: 0 5px; }
+            #app-header .menu-container li a{color: #999; line-height: 29px; text-decoration: none;}
+            /* #app-header .menu-container li:hover,#app-header .menu-container li.hover{background-color: white;}
+            #app-header .menu-container li:hover a,#app-header .menu-container li.hover a{color: black;} */
+            #app-header .menu-container li:hover{background-color: white;}
+            #app-header .menu-container li:hover a{color: black;}
+            #app-content{flex-grow: 1; overflow: hidden;}
+            /* #content-iframe{width: 100%; height: 100%; overflow: auto; border: none;padding: 0; margin: 0;} */
+        </style>
+        <link rel="stylesheet" href="cart/index.css">
+	</head>
+	<body>
+        <div id="app" v-cloak>
+<div ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" style="height:100%;">
+    <el-container id="main-container" v-cloak class="loading">
+        <el-aside width="240px" style="height: 100%; background-color:white;">
+            <div class="section">
+                <div class="section-header" class="clearfix">
+                    <span style="font-size: 12px;">购物车</span>
+                </div>
+                <div class="section-body">
+                    <el-form :inline="false" :model="options" size="mini" label-width="62px">
+                        <el-form-item label="订单编号">
+                            <el-input v-model="options.themeCode" placeholder="非必填" maxlength="6"></el-input>
+                        </el-form-item>
+                        <el-form-item label="副标题">
+                            <el-input v-model="options.title" placeholder=""></el-input>
+                        </el-form-item>
+                        <el-form-item label="行间距">
+                            <el-input v-model="options.columnSpace" placeholder="10" >
+                                <template slot="suffix">像素</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="排序">
+                            <el-radio-group v-model="options.sortType" @change="sortTypeChangeHandle">
+                                <el-radio label="SORT_BY_GROUP">默认</el-radio>
+                                <el-radio label="SORT_BY_SUBCODE">子编号</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="列数">
+                            <!-- <el-input v-model="options.columns" placeholder="4"></el-input> -->
+                            <!-- <el-slider v-model="options.columns" :min="1" :max="20" @change="columnsChangeHandler"></el-slider> -->
+                            <el-input-number v-model="options.columns" @change="columnsChangeHandle" :precision="0" :step="1" :min="1" :max="20"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="缩放比例">
+                            <!-- <el-slider v-model="options.scale" :min="1" :max="20" @change="scaleHandler"></el-slider> -->
+                            <el-input-number v-model="options.scale" @change="scaleChangeHandle" :precision="0" :step="1" :min="1" :max="20"></el-input-number>
+                        </el-form-item>
+                        <el-form-item label="图片尺寸">
+                            <span style="color: #606266;">${options.canvasWidth} * ${options.canvasHeight} 像素</span>
+                        </el-form-item>
+                        <!-- <el-form-item label="采购数量">
+                            <el-radio-group v-model="options.quantityShow">
+                                <el-radio :label="false">隐藏</el-radio>
+                                <el-radio :label="true">显示</el-radio>
+                            </el-radio-group>
+                        </el-form-item> -->
+                        <el-form-item label="计量单位" v-show="options.quantityShow">
+                            <el-select v-model="options.unitName" placeholder="请选择" style="width: 100%;">
+                                <el-option key="个" label="个" value="个"></el-option>
+                                <el-option key="条" label="条" value="条"></el-option>
+                                <el-option key="只" label="只" value="只"></el-option>
+                                <el-option key="对" label="对" value="对"></el-option>
+                                <el-option key="套" label="套" value="套"></el-option>
+                                <el-option key="包" label="包" value="包"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="imageDownloadHandler" :disabled="!images.length">下载</el-button>
+                            <!-- <el-button type="success" @click="refreshHandler" :disabled="!images.length">刷新</el-button> -->
+                            <el-button @click="clearHandler" :disabled="!images.length">清空</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </el-aside>
+        <el-main style="margin-left:10px; padding: 0px; background-color: white;">
+            <div class="section" style="width: 100%; height: 100%;">
+                <div class="section-header">
+                    <span>产品列表</span>
+                </div>
+                <div class="section-body">
+                    <div style="width: 100%; height:100%; overflow: auto;">
+                        <ul id="design-list" v-if="images.length>0" :style="'width:' + designsWrapperWidth + 'px'">
+                            <template v-for="(image,index) of images" >
+                                <li class="design-item" style="position:relative;" v-if="!image.hidden">
+                                    <div class="button-remove"><i class="el-icon-close" @click="handleImageRemove(index)"></i></div>
+                                    <p class="design-image-wrapper"><img :src="image.url" /></p>
+                                    <p class="design-name">
+                                        <span contenteditable="false" class="editable-text">${image.name}</span>
+                                        <span v-show="options.quantityShow">-</span>
+                                        <span v-show="options.quantityShow" contenteditable="true" class="editable-text">${image.quantity}</span>
+                                        <span class="unit-name" contenteditable="true" v-show="options.quantityShow">${options.unitName}</span>
+                                    </p>
+                                </li>
+                                <li class="design-item hidden" v-else>
+                                    <p class="design-image-wrapper"><img src="" /></p>
+                                    <p class="design-name"></p>
+                                </li>
+                            </template>
+                        </ul>
+                        <el-empty class="design-list-empty" v-else description="空空如也"></el-empty>
+                    </div>
+                </div>
+            </div>
+
+        </el-main>
+    </el-container>
+</div>
+        </div>
+
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js" type="application/javascript"></script>
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/element-ui/2.15.7/index.min.js" type="application/javascript"></script>
+        <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.min.js" type="application/javascript"></script>
+        <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.10/clipboard.min.js" type="application/javascript"></script>
+        <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard-polyfill/4.0.0-rc1/main/clipboard-polyfill.min.js" type="application/javascript"></script>
+        <script type="text/javascript" src="common/index.js?v=0.01"></script>
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/FileSaver.js/2.0.5/FileSaver.min.js" type="application/javascript"></script>
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/html-to-image/1.9.0/html-to-image.min.js" type="application/javascript"></script>
+        <script src="cart/index.js?v=0.01"></script>
+	</body>
+</html>
